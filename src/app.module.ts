@@ -1,10 +1,6 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
+import { ModuleMetadataBuilder } from "./utils/ModuleMetadataBuilder";
+import { GatewayModule } from "./websocket/gateways/gateway.module";
 
-@Module({
-    imports: [],
-    controllers: [AppController],
-    providers: [AppService],
-})
+@Module(ModuleMetadataBuilder.build([GatewayModule]))
 export class AppModule {}
