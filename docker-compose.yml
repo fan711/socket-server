@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+    # Redis for PubSub communication
+    redis:
+        image: grokzen/redis-cluster:6.2.1
+        ports:
+            - "7000-7005:7000-7005"
+        environment:
+            - "IP=0.0.0.0"
+        networks:
+            - backend
+
+networks:
+    backend:
