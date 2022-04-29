@@ -33,13 +33,15 @@ export class SocketEventGateway implements OnGatewayInit, OnGatewayDisconnect {
     }
 
     async emitNewQuestion(question: string): Promise<void> {
+        // emit to local server sockets
         this.emitQuestionToServerSockets(question);
-        // emit server side event
+        // emit server side events
         this.server.serverSideEmit("newQuestion", question);
     }
 
     afterInit(server: Server): void {
-        server.on("serverSideEvent", (question: string) => {
+        server.on("newQuestion", (question: string) => {
+            // receive server side events
             this.emitQuestionToServerSockets(question);
         });
     }

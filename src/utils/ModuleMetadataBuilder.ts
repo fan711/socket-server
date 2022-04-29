@@ -20,12 +20,9 @@ export class ModuleMetadataBuilder {
 
         imports.push(
             ConfigModule.forRoot({
+                envFilePath: `.env.${process.env.NODE_ENV}`,
                 cache: true,
                 validationSchema: Joi.object({
-                    AWS_APP_CONFIG_ID: Joi.string(),
-                    AWS_APP_CONFIG_PROFILE_ID: Joi.string(),
-                    AWS_APP_CONFIG_ENV_ID: Joi.string(),
-                    AWS_APP_CONFIG_POLL_INTERVAL: Joi.number().integer().greater(14).default(60),
                     REDIS_HOST: Joi.string().hostname().default("localhost"),
                     REDIS_NAT_MAP: customJoi.redisNatMap().items(
                         Joi.string()

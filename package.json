@@ -1,8 +1,8 @@
 {
-    "name": "nest-typescript-starter",
+    "name": "nest-socket-server",
     "private": true,
     "version": "1.0.0",
-    "description": "Nest TypeScript starter repository",
+    "description": "Nest TypeScript socket server repository",
     "license": "MIT",
     "scripts": {
         "prebuild": "rimraf dist",
@@ -12,6 +12,9 @@
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
+        "start:server1": "NODE_ENV=server1 npm run start:dev",
+        "start:server2": "NODE_ENV=server2 npm run start:dev",
+        "start:server3": "NODE_ENV=server3 npm run start:dev",
         "lint": "prettier --check . && eslint \"{seeding,src,apps,libs,test}/**/*.ts\"",
         "prettier": "prettier --write .",
         "test": "jest",
