@@ -7,6 +7,7 @@ import {
     WebSocketServer,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
+import { Logger } from "@nestjs/common";
 import { AdapterService } from "../adapters/adapter.service";
 
 @WebSocketGateway({
@@ -19,14 +20,22 @@ export class SocketEventGateway implements OnGatewayInit, OnGatewayDisconnect {
     @WebSocketServer()
     server: Server;
 
-    constructor(private adapterService: AdapterService) {}
+    private readonly logger: Logger;
+
+    constructor(private adapterService: AdapterService) {
+        this.logger = new Logger(SocketEventGateway.name);
+    }
 
     private async emitQuestionToServerSockets(question: string): Promise<void> {
+        this.logger.debug(`Emitting question to server sockets.`);
         this.server.local
             .to("room")
             .fetchSockets()
             .then((sockets) => {
+                this.logger.debug(`Fetched available local sockets: ${sockets.length}`);
+
                 sockets.forEach(async (socket) => {
+                    this.logger.debug(`Emitting to socket ${socket.id}`);
                     this.server.to(socket.id).emit("question", question);
                 });
             });
@@ -41,6 +50,7 @@ export class SocketEventGateway implements OnGatewayInit, OnGatewayDisconnect {
 
     afterInit(server: Server): void {
         server.on("newQuestion", (question: string) => {
+            this.logger.debug(`Received server side question: ${question}`);
             // receive server side events
             this.emitQuestionToServerSockets(question);
         });
@@ -48,6 +58,7 @@ export class SocketEventGateway implements OnGatewayInit, OnGatewayDisconnect {
 
     @SubscribeMessage("question")
     handleQuestion(client: any, question: string) {
+        this.logger.debug(`Received question from client: ${question}`);
         this.emitNewQuestion(question);
     }
 
